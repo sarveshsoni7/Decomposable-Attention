@@ -1,5 +1,5 @@
 # training hyper-parameters
-num_epochs : 200
+num_epochs : 300
 batch_size : 128
 dropout_keep_prob : 0.8
 clip_value : 100
@@ -33,7 +33,8 @@ testset_path : ./SNLI/clean data/test.txt
 
 ## reports
 save_path : ./model/checkpoint
-best_path : ./model/bestval
+# best_path : ./model/bestval_dev_loss_0.8683.ckpt
+best_path : ./model/bestval_dev_loss_0.8951.ckpt
 log_path : ./config/log/log
 tfboard_path : ./tensorboard
 

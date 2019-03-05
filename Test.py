@@ -39,10 +39,12 @@ def predict():
         y_pred = []
         for batch in batches:
             batch_premise_test, batch_premise_mask_test, batch_hypothesis_test, batch_hypothesis_mask_test, _ = batch
+            cnt_p = batch_premise_mask_test.shape[0]
+            cnt_h = batch_hypothesis_mask_test.shape[0]
             feed_dict = {model.premise: batch_premise_test,
-                         model.premise_mask: batch_premise_mask_test,
+                         model.premise_mask: batch_premise_mask_test.reshape([cnt_p,1]),
                          model.hypothesis: batch_hypothesis_test,
-                         model.hypothesis_mask: batch_hypothesis_mask_test,
+                         model.hypothesis_mask: batch_hypothesis_mask_test.reshape([cnt_h,1]),
                          model.dropout_keep_prob: 1.0}
             logits = sess.run([model.logits], feed_dict = feed_dict)
             logits = np.array(logits)

@@ -186,7 +186,7 @@ def sentence2Index(dataPath, vocabDict, maxLen = 100, lowercase = True):
     s1Pad, s2Pad = pad_sequences(s1List, maxLen, padding='post'), pad_sequences(s2List, maxLen, padding='post')
     s1MaskList, s2MaskList = (s1Pad > 0).astype(np.int32), (s2Pad > 0).astype(np.int32)
     enc = OneHotEncoder(sparse=False)
-    labelList = enc._fit_transform(labelList)
+    labelList = enc.fit_transform(labelList)
     s1Mask = np.asarray(s1Mask, np.int32)
     s2Mask = np.asarray(s2Mask, np.int32)
     labelList = np.asarray(labelList, np.int32)

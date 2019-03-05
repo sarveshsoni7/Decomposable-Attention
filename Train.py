@@ -19,10 +19,21 @@ import Config
 # feed data into feed_dict
 def feed_data(premise, premise_mask, hypothesis, hypothesis_mask, y_batch,
               dropout_keep_prob):
+    # premise = np.transpose(premise)
+    # hypothesis = np.transpose(hypothesis)
+    # hypothesis_mask = np.transpose(hypothesis_mask)
+    # print("Shape of model.hypothesis_mask")
+    # print(np.shape(hypothesis_mask))
+    # print("Shape of premise_mask:")
+    # print(premise_mask.shape)
+    # print("Shape of premise:")
+    # print(premise.shape)
+    cnt_p = premise_mask.shape[0]
+    cnt_h = hypothesis_mask.shape[0]
     feed_dict = {model.premise: premise,
-                 model.premise_mask: premise_mask,
+                 model.premise_mask: premise_mask.reshape([cnt_p,1]),
                  model.hypothesis: hypothesis,
-                 model.hypothesis_mask: hypothesis_mask,
+                 model.hypothesis_mask: hypothesis_mask.reshape([cnt_h,1]),
                  model.y: y_batch,
                  model.dropout_keep_prob: dropout_keep_prob}
     return feed_dict
@@ -54,7 +65,7 @@ def train():
     print_log('Time usage : ', time_diff, file=log)
 
     # model saving
-    saver = tf.train.Saver(max_to_keep=5)
+    saver = tf.train.Saver(max_to_keep=None)
     save_file_dir, save_file_name = os.path.split(arg.save_path)
     if not os.path.exists(save_file_dir):
         os.makedirs(save_file_dir)
@@ -104,12 +115,13 @@ def train():
                 loss_val, acc_val = evaluate(sess, premise_dev, premise_mask_dev, hypothesis_dev, hypothesis_mask_dev, y_dev)
 
                 # save model
-                saver.save(sess = sess, save_path = arg.save_path + '_dev_loss_{:.4f}.ckpt'.format(loss_val))
+                if total_batch % 32000 == 0:
+                    saver.save(sess = sess, save_path = arg.save_path + '_dev_loss_{:.4f}.ckpt'.format(loss_val))
                 # save best model
                 if acc_val > best_acc_val:
                     best_acc_val = acc_val
                     last_improved_batch = total_batch
-                    saver.save(sess = sess, save_path = arg.best_path)
+                    saver.save(sess = sess, save_path = arg.best_path + '_dev_loss_{:.4f}.ckpt'.format(loss_val))
                     improved_flag = '*'
                 else:
                     improved_flag = ''

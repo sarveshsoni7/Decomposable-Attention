@@ -65,8 +65,8 @@ class Decomposable(object):
         self.premise = tf.placeholder(tf.int32, [None, self.seq_length], 'premise')
         self.hypothesis = tf.placeholder(tf.int32, [None, self.seq_length], 'hypothesis')
         self.y = tf.placeholder(tf.float32, [None, self.n_classes], 'y_true')
-        self.premise_mask = tf.placeholder(tf.float32, [None, self.seq_length], 'premise_mask')
-        self.hypothesis_mask = tf.placeholder(tf.float32, [None, self.seq_length], 'hypothesis_mask')
+        self.premise_mask = tf.placeholder(tf.float32, [None, 1], 'premise_mask')
+        self.hypothesis_mask = tf.placeholder(tf.float32, [None, 1], 'hypothesis_mask')
         self.embed_matrix = tf.placeholder(tf.float32, [self.n_vocab, self.embedding_size], 'embed_matrix')
         self.dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
 
